@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"edu.acceso.ej1_4","l":"Backend"},{"p":"edu.acceso.ej1_4","l":"BackendObject"},{"p":"edu.acceso.ej1_4","l":"Estudiante"},{"p":"edu.acceso.ej1_4","l":"Estudios"},{"p":"edu.acceso.ej1_4","l":"InterfazTexto"},{"p":"edu.acceso.ej1_4","l":"Main"}];updateSearchResults();
