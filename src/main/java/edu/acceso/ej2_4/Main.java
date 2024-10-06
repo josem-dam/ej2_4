@@ -8,7 +8,7 @@ import java.nio.file.Path;
 public class Main {
     public static void main(String[] args) throws Exception {
         Path archivo = Path.of(System.getProperty("java.io.tmpdir"), "estudiantes");
-        InterfazTexto.start(archivo);
-        //InterfazAutomatica.start(archivo);
+        //InterfazTexto.start(archivo);
+        InterfazAutomatica.start(archivo);
     }
 }

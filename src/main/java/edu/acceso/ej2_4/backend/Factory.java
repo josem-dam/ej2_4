@@ -1,6 +1,7 @@
 package edu.acceso.ej2_4.backend;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 
 import edu.acceso.ej2_4.Estudiante;
 import edu.acceso.ej2_4.backend.csv.BackendCsv;
@@ -16,6 +17,11 @@ import edu.acceso.ej2_4.backend.object.EstudianteObject;
  */
 public class Factory {
 
+    /**
+     * Lista de backends disponibles.
+     */
+    public final static String[] formatos = new String[] {"CSV", "JSON", "object", "XML"};
+
     private String formato;
 
     /**
@@ -30,7 +36,12 @@ public class Factory {
             case "json":
                 break;
             default:
-                throw new IllegalArgumentException("Formato no soportando: " + this.formato);
+                if(Arrays.stream(formatos).map(f -> f.toLowerCase()).anyMatch(f -> f.equals(this.formato))) {
+                    throw new UnsupportedOperationException(formato + ": Formato no soportado.");
+                }
+                else {
+                    throw new IllegalArgumentException(formato + ": Formato desconocido.");
+                }
         }
     } 
 

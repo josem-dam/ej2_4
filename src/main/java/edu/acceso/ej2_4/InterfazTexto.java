@@ -105,12 +105,11 @@ public class InterfazTexto {
      * @param ruta Ruta sin extensión del archivo que se usará para almacenar datos.
      */
     public static void start(Path ruta) {
-        String formato[] = new String[] {"JSON", "CSV", "object"};
-        int respFormato = preguntarOpcion(formato, "¿En qué formato quiere almacenar la información");
-        factory = new Factory(formato[respFormato]);
+        int respFormato = preguntarOpcion(Factory.formatos, "¿En qué formato quiere almacenar la información");
+        factory = new Factory(Factory.formatos[respFormato]);
 
         // Añadimos a la ruta la extensión.
-        ruta = calcularRuta(ruta, formato[respFormato]);
+        ruta = calcularRuta(ruta, Factory.formatos[respFormato]);
 
         System.out.print("Indique el número de estudiantes que desea registrar: ");
         int cantidad = sc.nextInt();

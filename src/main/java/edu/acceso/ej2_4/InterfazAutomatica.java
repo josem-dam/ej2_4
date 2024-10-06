@@ -24,7 +24,7 @@ public class InterfazAutomatica {
      */
     public static void start(Path ruta) {
 
-        String formato = "csv";
+        String formato = "CSV";
         Estudiante[] estudiantes = null;
 
         factory = new Factory(formato);
