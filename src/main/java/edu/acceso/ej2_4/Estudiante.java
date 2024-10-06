@@ -75,11 +75,12 @@ public class Estudiante implements Serializable {
      * @param nacimiento Fecha de nacimiento.
      * @param estudios Estudios previos.
      */
-    public void cargarDatos(String nombre, String apellidos, Date nacimiento, Estudios estudios) {
+    public Estudiante cargarDatos(String nombre, String apellidos, Date nacimiento, Estudios estudios) {
         setNombre(nombre);
         setApellidos(apellidos);
         setNacimiento(nacimiento);
         setEstudios(estudios);
+        return this;
     }
 
     /**

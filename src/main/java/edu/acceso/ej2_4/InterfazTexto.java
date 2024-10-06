@@ -82,9 +82,12 @@ public class InterfazTexto {
         }
         Estudios previos = preguntarEnum(Estudios.class, "¿Qué estudios previos posee?");
 
-        Estudiante estudiante = factory.crearEstudiante();
-        estudiante.cargarDatos(nombre, apellidos, nacimiento, previos);
-        return estudiante;
+        return factory.crearEstudiante().cargarDatos(
+            nombre,
+            apellidos,
+            nacimiento,
+            previos
+        );
     }
 
     /**

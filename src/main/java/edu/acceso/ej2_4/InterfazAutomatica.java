@@ -25,28 +25,26 @@ public class InterfazAutomatica {
     public static void start(Path ruta) {
 
         String formato = "csv";
+        Estudiante[] estudiantes = null;
 
         factory = new Factory(formato);
         ruta = InterfazTexto.calcularRuta(ruta, formato);
-        Estudiante[] estudiantes = new Estudiante[] {
-            factory.crearEstudiante(),
-            factory.crearEstudiante()
-        };
-
+        
         try {
-            estudiantes[0].cargarDatos(
-                "Pedro",
-                "García Gavilán",
-                df.parse("20/12/2012"),
-                Estudios.SECUNDARIA
-            );
-
-            estudiantes[1].cargarDatos(
-                "María Asunción",
-                "Menéndez Valera",
-                df.parse("20/09/2009"),
-                Estudios.SECUNDARIA
-            );
+            estudiantes = new Estudiante[] {
+                factory.crearEstudiante().cargarDatos(
+                    "Pedro",
+                    "García Gavilán",
+                    df.parse("20/12/2012"),
+                    Estudios.SECUNDARIA
+                ),
+                factory.crearEstudiante().cargarDatos(
+                    "María Asunción",
+                    "Menéndez Valera",
+                    df.parse("20/09/2009"),
+                    Estudios.SECUNDARIA
+                )
+            };
         }
         catch(ParseException err) {
             err.printStackTrace();
