@@ -10,10 +10,18 @@ import edu.acceso.ej2_4.backend.json.EstudianteJson;
 import edu.acceso.ej2_4.backend.object.BackendObject;
 import edu.acceso.ej2_4.backend.object.EstudianteObject;
 
+/**
+ * Implementa el patrón Factory para seleccionar las clases apropiadas
+ * según sea el almacenamiento.
+ */
 public class Factory {
 
     private String formato;
 
+    /**
+     * Constructor de la clase.
+     * @param formato Formato de almacenamiento (csv, json, etc)
+     */
     public Factory(String formato) {
         setFormato(formato);
         switch(this.formato) {
@@ -26,14 +34,27 @@ public class Factory {
         }
     } 
 
+    /**
+     * Define el formato de almacenamiento.
+     * @param formato El formato.
+     */
     private void setFormato(String formato) {
         this.formato = formato.toLowerCase();
     }
 
+    /**
+     * Devuelve el formato de almacenamiento.
+     * @return El formato.
+     */
     public String getFormato() {
         return formato;
     }
 
+    /**
+     * Crea un backend que se usará para almacenar la información.
+     * @param archivo La ruta del archivo.
+     * @return  Un objeto para almacenar en el formato adecuado.
+     */
     public Backend crearBackend(Path archivo) {
         switch(formato) {
             case "json":
@@ -48,6 +69,10 @@ public class Factory {
         }
     } 
 
+    /**
+     * Crea un estudiante apto para ser almacenado en el formato escogido.
+     * @return Un objeto estudiante apropiado.
+     */
     public Estudiante crearEstudiante() {
         switch(formato) {
             case "json":

@@ -17,27 +17,27 @@ import org.apache.commons.csv.CSVPrinter;
 
 import edu.acceso.ej2_4.backend.Backend;
 
+/**
+ * Backend para almacenar estudiantes en un archivo CSV.
+ */
 public class BackendCsv implements Backend {
 
     private Path ruta;
-    private static CSVFormat formatoBase = CSVFormat.Builder.create(CSVFormat.DEFAULT)
-                                            .setHeader(EstudianteCsv.columnas)
-                                            .build();
+    private CSVFormat formatoBase;
 
+    /**
+     * Constructor de la clase.
+     * @param ruta Archivo de almacenamiento.
+     */
     public BackendCsv(Path ruta) {
-        setRuta(ruta);
-    }
-
-    public Path getRuta() {
-        return ruta;
-    }
-
-    public void setRuta(Path ruta) {
-        this.ruta = ruta;
+        this.ruta = ruta;  
+        formatoBase = CSVFormat.Builder.create(CSVFormat.DEFAULT)
+                                        .setHeader(EstudianteCsv.columnas)
+                                        .build();
     }
 
     @Override
-    public EstudianteCsv[] load() throws IOException {
+    public EstudianteCsv[] read() throws IOException {
         CSVFormat formato = CSVFormat.Builder.create(formatoBase)
                             .setSkipHeaderRecord(true)
                             .build();

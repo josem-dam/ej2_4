@@ -15,9 +15,6 @@ import edu.acceso.ej2_4.backend.Backend;
  */
 public class BackendObject implements Backend {
 
-    /**
-     * Ruta del archivo de almacenamiento.
-     */
     private Path archivo;
 
     /**
@@ -49,7 +46,7 @@ public class BackendObject implements Backend {
      * @throws IOException Si hay algún problema con el archivo de almacenamiento.
      */
     @Override
-    public Object[] load() throws IOException {
+    public Object[] read() throws IOException {
         try (
             InputStream is = Files.newInputStream(archivo);
             ObjectInputStream ois = new ObjectInputStream(is);

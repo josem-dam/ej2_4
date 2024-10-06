@@ -112,7 +112,7 @@ public class Estudiante implements Serializable {
 
     /**
      * Getter de apellidos.
-     * @return 
+     * @return pellidos del estudiante.
      */
     public String getApellidos() {
         return apellidos;

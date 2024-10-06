@@ -3,6 +3,6 @@ package edu.acceso.ej2_4.backend.object;
 import edu.acceso.ej2_4.Estudiante;
 
 /**
- * Modela un estudiante según el enunciado del ejercicio.
+ * Extensión de la clase estudiante para su serialización.
  */
 public class EstudianteObject extends Estudiante {}

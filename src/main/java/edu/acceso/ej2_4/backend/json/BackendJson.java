@@ -20,11 +20,9 @@ import edu.acceso.ej2_4.backend.Backend;
  */
 public class BackendJson implements Backend {
 
-    /**
-     * Ruta del archivo de almacenamiento.
-     */
     private Path archivo;
     private ObjectMapper mapper;
+    // Hemos declarado cómo se traducen fechas en la definición del campo.
     //private static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
     /**
@@ -41,7 +39,7 @@ public class BackendJson implements Backend {
 
     /**
      * Almacena el objeto serializado en un archivo.
-     * @param datos El objeto a serializar.
+     * @param datos Eloadl objeto a serializar.
      * @throws IOException Si hay algún problema con el archivo de almacenamiento.
      */
     @Override
@@ -60,7 +58,7 @@ public class BackendJson implements Backend {
      * @throws IOException Si hay algún problema con el archivo de almacenamiento.
      */
     @Override
-    public EstudianteJson[] load() throws IOException {
+    public EstudianteJson[] read() throws IOException {
         try (
             InputStream st = Files.newInputStream(archivo);
             InputStreamReader sr = new InputStreamReader(st);

@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"edu.acceso.ej1_4"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"edu.acceso.ej2_4"},{"l":"edu.acceso.ej2_4.backend"},{"l":"edu.acceso.ej2_4.backend.csv"},{"l":"edu.acceso.ej2_4.backend.json"},{"l":"edu.acceso.ej2_4.backend.object"}];updateSearchResults();

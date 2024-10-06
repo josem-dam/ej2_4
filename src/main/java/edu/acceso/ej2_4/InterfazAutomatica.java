@@ -9,11 +9,19 @@ import java.util.Arrays;
 import edu.acceso.ej2_4.backend.Backend;
 import edu.acceso.ej2_4.backend.Factory;
 
+/**
+ * Interfaz que ahorra introducir datos. Sirve, simplemente, para hacer pruebas
+ * sin tener que perder tiempo tecleando.
+ */
 public class InterfazAutomatica {
 
     private static Factory factory;
     private static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
+    /**
+     * Inicia la interfaz.
+     * @param ruta La ruta del archivo donde se almacenará la información.
+     */
     public static void start(Path ruta) {
 
         String formato = "csv";
@@ -51,7 +59,7 @@ public class InterfazAutomatica {
             System.out.println("Guardamos los estudiantes en un archivo...");
             backend.save(estudiantes);
             System.out.println("Y ahora los recuperamos para comparar");
-            Estudiante[] estudiantesLeidos = (Estudiante[]) backend.load();
+            Estudiante[] estudiantesLeidos = (Estudiante[]) backend.read();
             System.out.printf("Lista original: %s\n", Arrays.toString(estudiantes));
             System.out.printf("Lista recuperada: %s\n", Arrays.toString(estudiantesLeidos));
             System.out.printf("¿Son iguales ambas listas? %b\n", Arrays.equals(estudiantes, estudiantesLeidos));
