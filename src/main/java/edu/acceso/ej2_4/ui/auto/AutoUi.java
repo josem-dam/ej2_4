@@ -20,9 +20,18 @@ import edu.acceso.ej2_4.ui.Ui;
 public class AutoUi implements Ui {
 
     private static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    private Map<String, String> opciones;
+
+    /**
+     * Constructor de la clase.
+     * @param opciones Opciones de usuario que modifican el comportamiento del programa
+     */
+    public AutoUi(Map<String, String> opciones) {
+        this.opciones = opciones;
+    }
 
     @Override
-    public void start(Map<String, String> opciones) {
+    public void start() {
 
         Estudiante[] estudiantes = null;
 

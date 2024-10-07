@@ -1,7 +1,6 @@
 package edu.acceso.ej2_4.ui;
 
 import java.nio.file.Path;
-import java.util.Map;
 
 /**
  * Interfaz que deben cumplir las interfaces de usuario.
@@ -9,9 +8,8 @@ import java.util.Map;
 public interface Ui {
     /**
      * Lanza la interfaz de interacción con el usuario.
-     * @param opciones Opciones de usuario que modifican el comportamiento del programa.
      */
-    public void start(Map<String, String> opciones);
+    public void start();
 
     /**
      * Genera la ruta del archivo donde se almacenan los datos.

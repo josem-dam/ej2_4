@@ -24,6 +24,15 @@ public class TextUi implements Ui {
     private static BackendFactory factory;
     private static Scanner sc = new Scanner(System.in);
     private static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    private Map<String, String> opciones;
+
+    /**
+     * Constructor de la clase.
+     * @param opciones Opciones de usuario que modifican el comportamiento del programa
+     */
+    public TextUi(Map<String, String> opciones) {
+        this.opciones = opciones;
+    }
 
     /**
      * Crea un menú para escoger una entre varias opciones.
@@ -95,7 +104,7 @@ public class TextUi implements Ui {
     }
 
     @Override
-    public void start(Map<String, String> opciones) {
+    public void start() {
 
         String formato = opciones.getOrDefault("formato", null);
         if(formato == null) {

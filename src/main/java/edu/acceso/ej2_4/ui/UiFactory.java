@@ -1,6 +1,7 @@
 package edu.acceso.ej2_4.ui;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import edu.acceso.ej2_4.ui.auto.AutoUi;
 import edu.acceso.ej2_4.ui.texto.TextUi;
@@ -44,14 +45,15 @@ public class UiFactory {
 
     /**
      * Crea una interfaz de usuario.
+     * @param opciones Opciones de usuario que modifican el comportamiento del programa.
      * @return La interfaz de usuario.
      */
-    public Ui crearInterfaz() {
+    public Ui crearInterfaz(Map<String, String> opciones) {
         switch(ui) {
             case "auto":
-                return new AutoUi();
+                return new AutoUi(opciones);
             case "text":
-                return new TextUi();
+                return new TextUi(opciones);
             default:
                 assert false: "Interfaz de usuario imposible";
                 return null;
