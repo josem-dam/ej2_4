@@ -13,7 +13,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import edu.acceso.ej2_4.backend.BackendFactory;
-import edu.acceso.ej2_4.ui.Ui;
 import edu.acceso.ej2_4.ui.UiFactory;
 
 /**
@@ -29,8 +28,8 @@ public class Main {
     private static Map<String, String> leerArgumentos(String[] args) {
         Options options = new Options();
         Option interfaz = Option.builder("i")
-                                .longOpt("interface")
-                                .argName("interface")
+                                .longOpt("ui")
+                                .argName("ui")
                                 .hasArg()
                                 .desc("Establece la interfaz de usuario")
                                 .build();
@@ -67,12 +66,12 @@ public class Main {
                 }
             }
 
-            if(cmd.hasOption("interface")) {
-                String interf = cmd.getOptionValue("interface");
+            if(cmd.hasOption("ui")) {
+                String interf = cmd.getOptionValue("ui");
                 if(!Arrays.stream(UiFactory.uis).anyMatch(ui ->  ui.toLowerCase().equals(interf.toLowerCase()))) {
                     throw new ParseException(interf + ": Inerfaz de usuario desconocida");
                 }
-                opciones.put("interface", interf);
+                opciones.put("ui", interf);
             }
 
             if(cmd.hasOption("file")) {
@@ -91,11 +90,14 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Map<String, String> opciones = leerArgumentos(args);
 
-        System.out.println(BackendFactory.formatos);
+        // Interfaz por defecto: automática y formato csv.
+        if(!opciones.containsKey("ui")) opciones.put("ui", "auto");
+        if(!opciones.containsKey("formato") && opciones.get("ui") == "auto") {
+            opciones.put("formato", "csv");
+        }
 
-        // Interfaz por defecto: la automática
-        UiFactory uiFactory = new UiFactory(opciones.getOrDefault("interface", "auto"));
-        Ui ui = uiFactory.crearInterfaz();
-        ui.start(opciones);
+
+        UiFactory uiFactory = new UiFactory(opciones.getOrDefault("ui", "auto"));
+        uiFactory.crearInterfaz().start(opciones);
     }
 }

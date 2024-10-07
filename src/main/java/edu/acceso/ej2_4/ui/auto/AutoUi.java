@@ -26,7 +26,9 @@ public class AutoUi implements Ui {
 
         Estudiante[] estudiantes = null;
 
-        String formato = opciones.getOrDefault("formato", "csv");
+        String formato = opciones.get("formato");
+        if(formato == null) throw new RuntimeException("No hay definido formato de almacenamiento");
+
         Path ruta = Ui.generarRuta(opciones.getOrDefault("file", null), formato.toLowerCase());
         BackendFactory factory = new BackendFactory(formato);
         
