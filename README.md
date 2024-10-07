@@ -19,5 +19,5 @@ c. Recupere el archivo y compruebe que la lista recuperada es igual a la lista o
    Para esto último, implemente un método equals que permita comprobar si dos objetos
    estudiante refieren el mismo estudiante.
 
-d. Debe permitir la selección de la interfaz de usuario mediante argumento de la
+d. Debe permitir la selección de la interfaz de usuario mediante argumento en la
    línea de órdenes. Implemente al menos una interfaz de texto.
