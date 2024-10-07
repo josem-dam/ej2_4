@@ -1,34 +1,34 @@
-package edu.acceso.ej2_4;
+package edu.acceso.ej2_4.ui.auto;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Map;
 
+import edu.acceso.ej2_4.Estudiante;
+import edu.acceso.ej2_4.Estudios;
 import edu.acceso.ej2_4.backend.Backend;
-import edu.acceso.ej2_4.backend.Factory;
+import edu.acceso.ej2_4.backend.BackendFactory;
+import edu.acceso.ej2_4.ui.Ui;
 
 /**
  * Interfaz que ahorra introducir datos. Sirve, simplemente, para hacer pruebas
  * sin tener que perder tiempo tecleando.
  */
-public class InterfazAutomatica {
+public class AutoUi implements Ui {
 
-    private static Factory factory;
     private static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-    /**
-     * Inicia la interfaz.
-     * @param ruta La ruta del archivo donde se almacenará la información.
-     */
-    public static void start(Path ruta) {
+    @Override
+    public void start(Map<String, String> opciones) {
 
-        String formato = "CSV";
         Estudiante[] estudiantes = null;
 
-        factory = new Factory(formato);
-        ruta = InterfazTexto.calcularRuta(ruta, formato);
+        String formato = opciones.getOrDefault("formato", "csv");
+        Path ruta = Ui.generarRuta(opciones.getOrDefault("file", null), formato.toLowerCase());
+        BackendFactory factory = new BackendFactory(formato);
         
         try {
             estudiantes = new Estudiante[] {

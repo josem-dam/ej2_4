@@ -1,4 +1,4 @@
-package edu.acceso.ej2_4;
+package edu.acceso.ej2_4.ui.texto;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -6,18 +6,22 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
+import edu.acceso.ej2_4.Estudiante;
+import edu.acceso.ej2_4.Estudios;
 import edu.acceso.ej2_4.backend.Backend;
-import edu.acceso.ej2_4.backend.Factory;
+import edu.acceso.ej2_4.backend.BackendFactory;
+import edu.acceso.ej2_4.ui.Ui;
 
 /**
  * Interfaz de texto para la aplicación.
  */
-public class InterfazTexto {
+public class TextUi implements Ui {
 
-    private static Factory factory;
+    private static BackendFactory factory;
     private static Scanner sc = new Scanner(System.in);
     private static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -90,27 +94,18 @@ public class InterfazTexto {
         );
     }
 
-    /**
-     * Genera la ruta de almacenamiento añadiendo la extensión.
-     * @param ruta Ruta original.
-     * @param formato Formato de almacenamiento que sirve para definir la extensión.
-     * @return La ruta con la extensión correcto.
-     */
-    static Path calcularRuta(Path ruta, String formato) {
-        return ruta.resolveSibling(ruta.getFileName().toString() + "." + formato.toLowerCase());
-    }
+    @Override
+    public void start(Map<String, String> opciones) {
 
-    /**
-     * Lanza la interfaz de interacción con el usuario.
-     * @param ruta Ruta sin extensión del archivo que se usará para almacenar datos.
-     */
-    public static void start(Path ruta) {
-        int respFormato = preguntarOpcion(Factory.formatos, "¿En qué formato quiere almacenar la información");
-        factory = new Factory(Factory.formatos[respFormato]);
+        String formato = opciones.getOrDefault("formato", null);
+        if(formato == null) {
+            int respFormato = preguntarOpcion(BackendFactory.formatos, "¿En qué formato quiere almacenar la información");
+            formato = BackendFactory.formatos[respFormato];
+        }
 
-        // Añadimos a la ruta la extensión.
-        ruta = calcularRuta(ruta, Factory.formatos[respFormato]);
-
+        Path ruta = Ui.generarRuta(opciones.getOrDefault("file", null), formato.toLowerCase());
+        factory = new BackendFactory(formato);
+        
         System.out.print("Indique el número de estudiantes que desea registrar: ");
         int cantidad = sc.nextInt();
 

@@ -15,7 +15,7 @@ import edu.acceso.ej2_4.backend.object.EstudianteObject;
  * Implementa el patrón Factory para seleccionar las clases apropiadas
  * según sea el almacenamiento.
  */
-public class Factory {
+public class BackendFactory {
 
     /**
      * Lista de backends disponibles.
@@ -28,21 +28,8 @@ public class Factory {
      * Constructor de la clase.
      * @param formato Formato de almacenamiento (csv, json, etc)
      */
-    public Factory(String formato) {
+    public BackendFactory(String formato) {
         setFormato(formato);
-        switch(this.formato) {
-            case "object":
-            case "csv":
-            case "json":
-                break;
-            default:
-                if(Arrays.stream(formatos).map(f -> f.toLowerCase()).anyMatch(f -> f.equals(this.formato))) {
-                    throw new UnsupportedOperationException(formato + ": Formato no soportado.");
-                }
-                else {
-                    throw new IllegalArgumentException(formato + ": Formato desconocido.");
-                }
-        }
     } 
 
     /**
@@ -51,6 +38,19 @@ public class Factory {
      */
     private void setFormato(String formato) {
         this.formato = formato.toLowerCase();
+        switch(this.formato) {
+            case "object":
+            case "csv":
+            case "json":
+                break;
+            default:
+                if(Arrays.stream(formatos).anyMatch(f -> f.toLowerCase().equals(this.formato))) {
+                    throw new UnsupportedOperationException(formato + ": Formato no soportado.");
+                }
+                else {
+                    throw new IllegalArgumentException(formato + ": Formato desconocido.");
+                }
+        }
     }
 
     /**

@@ -3,3 +3,6 @@ edu.acceso.ej2_4.backend
 edu.acceso.ej2_4.backend.csv
 edu.acceso.ej2_4.backend.json
 edu.acceso.ej2_4.backend.object
+edu.acceso.ej2_4.ui
+edu.acceso.ej2_4.ui.auto
+edu.acceso.ej2_4.ui.texto

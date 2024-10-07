@@ -74,6 +74,7 @@ public class Estudiante implements Serializable {
      * @param apellidos Apellidos del estudiante.
      * @param nacimiento Fecha de nacimiento.
      * @param estudios Estudios previos.
+     * @return El propio objeto.
      */
     public Estudiante cargarDatos(String nombre, String apellidos, Date nacimiento, Estudios estudios) {
         setNombre(nombre);
