@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>edu.acceso.ej1_4</groupId>
-    <artifactId>ej1_4</artifactId>
-    <name>Ejercicio 1.4</name>
+    <groupId>edu.acceso.ej2_4</groupId>
+    <artifactId>ej2_4</artifactId>
+    <name>Ejercicio 2.4</name>
     <version>1.0</version>
 
     <properties>
@@ -22,12 +22,33 @@
                 <!-- La última versión puede consultarse en el repositorio de Maven -->
                 <version>3.10.0</version>
                 <configuration>
-                <source>21</source> <!-- Versión de Java. En mi caso, OpenJDK 23 -->
-                <show>public</show>
+                    <source>21</source> <!-- Versión de Java. -->
+                    <show>public</show>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>clean-javadoc-only</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <configuration>
+                            <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                            <filesets>
+                                <fileset>
+                                    <directory>${project.build.directory}/reports/apidocs</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -35,6 +56,7 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.18.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
