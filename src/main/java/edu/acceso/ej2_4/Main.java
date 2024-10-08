@@ -96,7 +96,7 @@ public class Main {
             opciones.put("formato", "csv");
         }
 
-        UiFactory uiFactory = new UiFactory(opciones.get("ui"));
-        uiFactory.crearInterfaz(opciones).start();
+        UiFactory uiFactory = new UiFactory(opciones);
+        uiFactory.crearInterfaz().start();
     }
 }

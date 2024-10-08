@@ -17,30 +17,34 @@ public class UiFactory {
      */
     public final static String[] uis = new String[] {"auto", "text"};
 
-    private String ui;
+    private Map<String, String> opciones;
 
     /**
      * Constructor de la clase
      * @param ui Interfaz de usuario que se quiere usar.
      */
-    public UiFactory(String ui) {
-        setUi(ui);
+    public UiFactory(Map<String, String> opciones) {
+        setOpciones(opciones);
     }
 
-    private void setUi(String ui) {
-        this.ui = ui.toLowerCase();
-        switch(this.ui) {
+    private void setOpciones(Map<String, String> opciones) {
+        String ui = opciones.get("ui");
+        opciones.put("ui", ui.toLowerCase());
+
+        switch(opciones.get("ui")) {
             case "auto":
             case "text":
                 break;
             default:
-                if(Arrays.stream(uis).anyMatch(u -> u.toLowerCase().equals(this.ui))) {
+                if(Arrays.stream(uis).anyMatch(u -> u.toLowerCase().equals(opciones.get("ui")))) {
                     throw new UnsupportedOperationException(ui + ": Interfaz de usuario no soportada.");
                 }
                 else {
                     throw new IllegalArgumentException(ui + ": Interfaz de usuario desconocida.");
                 }
         }
+
+        this.opciones = opciones;
     }
 
     /**
@@ -48,8 +52,8 @@ public class UiFactory {
      * @param opciones Opciones de usuario que modifican el comportamiento del programa.
      * @return La interfaz de usuario.
      */
-    public Ui crearInterfaz(Map<String, String> opciones) {
-        switch(ui) {
+    public Ui crearInterfaz() {
+        switch(opciones.get("ui")) {
             case "auto":
                 return new AutoUi(opciones);
             case "text":
