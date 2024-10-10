@@ -21,7 +21,7 @@ public class UiFactory {
 
     /**
      * Constructor de la clase
-     * @param ui Interfaz de usuario que se quiere usar.
+     * @param opciones Opciones de usuario que modifican el comportamiento del programa.
      */
     public UiFactory(Map<String, String> opciones) {
         setOpciones(opciones);
@@ -49,7 +49,6 @@ public class UiFactory {
 
     /**
      * Crea una interfaz de usuario.
-     * @param opciones Opciones de usuario que modifican el comportamiento del programa.
      * @return La interfaz de usuario.
      */
     public Ui crearInterfaz() {

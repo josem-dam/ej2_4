@@ -24,6 +24,7 @@
                 <configuration>
                     <source>21</source> <!-- Versión de Java. -->
                     <show>public</show>
+                    <outputDirectory>${project.basedir}/docs</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
@@ -40,7 +41,7 @@
                             <excludeDefaultDirectories>true</excludeDefaultDirectories>
                             <filesets>
                                 <fileset>
-                                    <directory>${project.build.directory}/reports/apidocs</directory>
+                                    <directory>${project.basedir}/docs/apidocs</directory>
                                 </fileset>
                             </filesets>
                         </configuration>

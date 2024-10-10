@@ -1,0 +1,18 @@
+{
+    "version": "2.0.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Estudiante (auto)",
+            "request": "launch",
+            "mainClass": "edu.acceso.ej2_4.Main"
+        },
+        {
+            "type": "java",
+            "name": "Estudiante (text)",
+            "request": "launch",
+            "mainClass": "edu.acceso.ej2_4.Main",
+            "args": ["-i", "text"]
+        }
+    ]
+}

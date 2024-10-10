@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -42,26 +43,6 @@ public class Estudiante implements Serializable {
     private Estudios estudios;
 
     /**
-     * Obtiene el MD5 de una cadena de texto.
-     * @param data La cadena de texto de la que se quiere obtener el resumen criptográfico.
-     * @return El resumen en formato hexadecimal.
-     */
-    public static String md5(String data) {
-        try {
-            MessageDigest md5 = MessageDigest.getInstance("md5");
-            md5.update(data.getBytes());
-            byte[] digest = md5.digest();
-            Byte[] digestB = new Byte[digest.length];
-            Arrays.setAll(digestB, i -> digest[i]);
-            return Arrays.stream(digestB).map(b -> String.format("%02x", b)).collect(Collectors.joining(""));
-        }
-        catch(NoSuchAlgorithmException err) {
-            assert false: "El algoritmo MD5 no existe";
-            return null;
-        }
-    }
-
-    /**
      * Constructor de la clase.
      */
     public Estudiante() {
@@ -82,18 +63,6 @@ public class Estudiante implements Serializable {
         setNacimiento(nacimiento);
         setEstudios(estudios);
         return this;
-    }
-
-    /**
-     * Devuelve el identificador único del estudiante.
-     * @return El identificador en forma de cadena.
-     */
-    public String getId() {
-        if (id == null) {
-            String datos = String.format("%s%s%s%s", getNombre(), getApellidos(), df.format(getNacimiento()), getEstudios());
-            id = md5(datos);
-        }
-        return id.toString();
     }
 
     /**
@@ -184,9 +153,53 @@ public class Estudiante implements Serializable {
         return String.format("%s, %s (%d años)", apellidos, nombre, edad());
     }
 
+    /**
+     * Obtiene el MD5 de una cadena de texto (no es necesario)
+     * @param data La cadena de texto de la que se quiere obtener el resumen criptográfico.
+     * @return El resumen en formato hexadecimal.
+     */
+    public static String md5(String data) {
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("md5");
+            md5.update(data.getBytes());
+            byte[] digest = md5.digest();
+            Byte[] digestB = new Byte[digest.length];
+            Arrays.setAll(digestB, i -> digest[i]);
+            return Arrays.stream(digestB).map(b -> String.format("%02x", b)).collect(Collectors.joining(""));
+        }
+        catch(NoSuchAlgorithmException err) {
+            assert false: "El algoritmo MD5 no existe";
+            return null;
+        }
+    }
+
+    /**
+     * Devuelve el identificador único del estudiante (no es necesario)
+     * @return El identificador en forma de cadena.
+     */
+    public String getId() {
+        if (id == null) {
+            String datos = String.format("%s%s%s%s", getNombre(), getApellidos(), df.format(getNacimiento()), getEstudios());
+            id = md5(datos);
+        }
+        return id.toString();
+    }
+
+    /*
     @Override
     public boolean equals(Object obj) {
         Estudiante otro = (Estudiante) obj;
         return getId().equals(otro.getId());
+    }
+    */
+
+    @Override
+    public boolean equals(Object obj) {
+        return hashCode() == Objects.hashCode(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombre, apellidos, nacimiento, estudios);
     }
 }
