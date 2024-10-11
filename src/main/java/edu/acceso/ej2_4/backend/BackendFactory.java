@@ -17,6 +17,49 @@ import edu.acceso.ej2_4.backend.object.EstudianteObject;
  */
 public class BackendFactory {
 
+    public static enum Formato {
+        CSV(BackendCsv.class, EstudianteCsv.class),
+        JSON(BackendJson.class, EstudianteJson.class),
+        object(BackendObject.class, EstudianteObject.class),
+        XML(null, null);  // Aún no está implementado
+
+        private Class<Backend> tipoBackend;
+        private Class<Estudiante> tipoEstudiante;
+
+        @SuppressWarnings("unchecked")
+        Formato(Class backend, Class estudiante) {
+            tipoBackend = backend;
+            tipoEstudiante = estudiante;
+        }
+
+        public Class<Backend> getTipoBackend() {
+            return tipoBackend;
+        }
+
+        public Class<Estudiante> getTipoEstudiante() {
+            return tipoEstudiante;
+        }
+
+        /**
+         * Devuelve el valor correspondiente a un formato.
+         * 
+         * <pre>
+         *      Formato.getFormato("csv"); // Formato.CSV
+         * </pre>
+         * @param formato El nombre del formato.
+         * @return El formato correspondiente o null, si no existe.
+         */
+        public static Formato getFormato(String formato) {
+            return Arrays.stream(Formato.values())
+                            .filter(f -> f.name().toLowerCase().equals(formato.toLowerCase()))
+                            .findFirst().orElse(null);
+        }
+
+        public boolean noImplementado() {
+            return tipoBackend == null || tipoEstudiante == null;
+        }
+    };
+
     /**
      * Lista de backends disponibles.
      */
