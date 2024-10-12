@@ -26,7 +26,9 @@ public class BackendJson implements Backend {
     // Hemos declarado cómo se traducen fechas en la definición del campo.
     //private static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-    private static JsonFactory factory = new JsonFactory();
+    protected JsonFactory factory() {
+        return new JsonFactory();
+    }
 
     /**
      * Constructor de la clase.
@@ -34,7 +36,7 @@ public class BackendJson implements Backend {
      */
     public BackendJson(Path archivo) {
         this.archivo = archivo;
-        mapper = new ObjectMapper(factory);
+        mapper = new ObjectMapper(factory());
         //mapper.setDateFormat(df);
         mapper.setTimeZone(TimeZone.getDefault());
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
