@@ -10,6 +10,7 @@ import java.nio.file.Path;
 //import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
+import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -20,10 +21,14 @@ import edu.acceso.ej2_4.backend.Backend;
  */
 public class BackendJson implements Backend {
 
-    private Path archivo;
-    private ObjectMapper mapper;
+    protected Path archivo;
+    protected ObjectMapper mapper;
     // Hemos declarado cómo se traducen fechas en la definición del campo.
     //private static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+    protected JsonFactory factory() {
+        return new JsonFactory();
+    }
 
     /**
      * Constructor de la clase.
@@ -31,7 +36,7 @@ public class BackendJson implements Backend {
      */
     public BackendJson(Path archivo) {
         this.archivo = archivo;
-        mapper = new ObjectMapper();
+        mapper = new ObjectMapper(factory());
         //mapper.setDateFormat(df);
         mapper.setTimeZone(TimeZone.getDefault());
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
