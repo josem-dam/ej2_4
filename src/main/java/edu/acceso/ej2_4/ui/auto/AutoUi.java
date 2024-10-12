@@ -38,7 +38,7 @@ public class AutoUi implements Ui {
         String formato = opciones.get("formato");
         if(formato == null) throw new RuntimeException("No hay definido formato de almacenamiento");
 
-        Path ruta = Ui.generarRuta(opciones.getOrDefault("file", null), formato.toLowerCase());
+        Path ruta = Backend.generarRuta(opciones.getOrDefault("file", null), formato.toLowerCase());
         BackendFactory factory = new BackendFactory(formato);
         
         try {

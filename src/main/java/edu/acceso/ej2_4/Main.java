@@ -58,7 +58,7 @@ public class Main {
 
             if(cmd.hasOption("backend")) {
                 String formato = cmd.getOptionValue("backend");
-                if(Arrays.stream(BackendFactory.formatos).anyMatch(f ->  f.toLowerCase().equals(formato.toLowerCase()))) {
+                if(BackendFactory.Formato.getFormato(formato) == null) {
                     throw new ParseException(formato + ": Formato desconocido");
                 }
                 else {

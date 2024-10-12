@@ -1,5 +1,6 @@
 package edu.acceso.ej2_4.backend;
 
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.Arrays;
 
@@ -23,20 +24,19 @@ public class BackendFactory {
         object(BackendObject.class, EstudianteObject.class),
         XML(null, null);  // Aún no está implementado
 
-        private Class<Backend> tipoBackend;
-        private Class<Estudiante> tipoEstudiante;
+        private Class<? extends Backend> tipoBackend;
+        private Class<? extends Estudiante> tipoEstudiante;
 
-        @SuppressWarnings("unchecked")
-        Formato(Class backend, Class estudiante) {
+        Formato(Class<? extends Backend> backend, Class<? extends Estudiante> estudiante) {
             tipoBackend = backend;
             tipoEstudiante = estudiante;
         }
 
-        public Class<Backend> getTipoBackend() {
+        public Class<? extends Backend> getTipoBackend() {
             return tipoBackend;
         }
 
-        public Class<Estudiante> getTipoEstudiante() {
+        public Class<? extends Estudiante> getTipoEstudiante() {
             return tipoEstudiante;
         }
 
@@ -60,12 +60,7 @@ public class BackendFactory {
         }
     };
 
-    /**
-     * Lista de backends disponibles.
-     */
-    public final static String[] formatos = new String[] {"CSV", "JSON", "object", "XML"};
-
-    private String formato;
+    private Formato formato;
 
     /**
      * Constructor de la clase.
@@ -80,19 +75,12 @@ public class BackendFactory {
      * @param formato El formato.
      */
     private void setFormato(String formato) {
-        this.formato = formato.toLowerCase();
-        switch(this.formato) {
-            case "object":
-            case "csv":
-            case "json":
-                break;
-            default:
-                if(Arrays.stream(formatos).anyMatch(f -> f.toLowerCase().equals(this.formato))) {
-                    throw new UnsupportedOperationException(formato + ": Formato no soportado.");
-                }
-                else {
-                    throw new IllegalArgumentException(formato + ": Formato desconocido.");
-                }
+        this.formato = Formato.getFormato(formato);
+        if(this.formato == null) {
+            throw new IllegalArgumentException(formato + ": Formato desconocido.");
+        }
+        else if(this.formato.noImplementado())  {
+            throw new UnsupportedOperationException(formato + ": Formato no soportado.");
         }
     }
 
@@ -100,7 +88,7 @@ public class BackendFactory {
      * Devuelve el formato de almacenamiento.
      * @return El formato.
      */
-    public String getFormato() {
+    public Formato getFormato() {
         return formato;
     }
 
@@ -110,16 +98,11 @@ public class BackendFactory {
      * @return  Un objeto para almacenar en el formato adecuado.
      */
     public Backend crearBackend(Path archivo) {
-        switch(formato) {
-            case "json":
-                return new BackendJson(archivo);
-            case "object":
-                return new BackendObject(archivo);
-            case "csv":
-                return new BackendCsv(archivo);
-            default:
-                assert false: "Backend imposible";
-                return null;
+        try {
+            return formato.getTipoBackend().getDeclaredConstructor(Path.class).newInstance(archivo);
+        }
+        catch(NoSuchMethodException|SecurityException|InstantiationException|IllegalAccessException|InvocationTargetException err) {
+            return null;
         }
     } 
 
@@ -128,16 +111,11 @@ public class BackendFactory {
      * @return Un objeto estudiante apropiado.
      */
     public Estudiante crearEstudiante() {
-        switch(formato) {
-            case "json":
-                return new EstudianteJson();
-            case "object":
-                return new EstudianteObject();
-            case "csv":
-                return new EstudianteCsv();
-            default:
-                assert false: "Backend imposible";
-                return null;
+        try {
+            return formato.getTipoEstudiante().getDeclaredConstructor().newInstance();
+        }
+        catch(NoSuchMethodException|SecurityException|InstantiationException|IllegalAccessException|InvocationTargetException err) {
+            return null;
         }
     }
 }

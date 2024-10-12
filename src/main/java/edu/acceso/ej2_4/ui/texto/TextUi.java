@@ -108,11 +108,12 @@ public class TextUi implements Ui {
 
         String formato = opciones.getOrDefault("formato", null);
         if(formato == null) {
-            int respFormato = preguntarOpcion(BackendFactory.formatos, "¿En qué formato quiere almacenar la información");
-            formato = BackendFactory.formatos[respFormato];
+            String[] formatos = Arrays.stream(BackendFactory.Formato.values()).map(f -> f.name()).toArray(String[]::new);
+            int respFormato = preguntarOpcion(formatos, "¿En qué formato quiere almacenar la información");
+            formato = formatos[respFormato];
         }
 
-        Path ruta = Ui.generarRuta(opciones.getOrDefault("file", null), formato.toLowerCase());
+        Path ruta = Backend.generarRuta(opciones.getOrDefault("file", null), formato.toLowerCase());
         factory = new BackendFactory(formato);
         
         System.out.print("Indique el número de estudiantes que desea registrar: ");
