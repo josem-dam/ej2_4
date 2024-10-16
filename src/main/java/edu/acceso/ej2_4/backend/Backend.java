@@ -13,14 +13,14 @@ public interface Backend {
      * @return El objeto almacenado.
      * @throws IOException Si no puede leerse el almacenamiento.
      */
-    public Object[] read() throws IOException;
+    public <T> T[] read(Class<T> clase) throws IOException;
 
     /**
      * Guarda los datos en el almacenamiento.
      * @param datos Los datos que se necesita guardar.
      * @throws IOException Si no pueden almacenarse los datos.
      */
-    public void save(Object[] datos) throws IOException;
+    public <T> void save(T[] datos) throws IOException;
 
     /**
      * Genera la ruta del archivo donde se almacenan los datos.

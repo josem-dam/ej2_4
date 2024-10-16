@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
@@ -20,7 +21,7 @@ import edu.acceso.ej2_4.backend.Backend;
 /**
  * Backend para almacenar estudiantes en un archivo CSV.
  */
-public class BackendCsv implements Backend {
+public class BackendCsv implements BackendRegistroCsv {
 
     private Path ruta;
     private CSVFormat formatoBase;
@@ -37,7 +38,7 @@ public class BackendCsv implements Backend {
     }
 
     @Override
-    public EstudianteCsv[] read() throws IOException {
+    public <T extends RegistroCsv> T[] read(Class<T> clase) throws IOException {
         CSVFormat formato = CSVFormat.Builder.create(formatoBase)
                             .setSkipHeaderRecord(true)
                             .build();
@@ -50,20 +51,20 @@ public class BackendCsv implements Backend {
             return StreamSupport.stream(parser.spliterator(), false).map(registro -> {
                 String[] campos = StreamSupport.stream(registro.spliterator(), false).toArray(String[]::new);
                 try {
-                    EstudianteCsv estudiante = new EstudianteCsv();
-                    estudiante.cargarCampos(campos);
-                    return estudiante;
+                    T objeto = clase.getDeclaredConstructor().newInstance();
+                    objeto.cargarCampos(campos);
+                    return objeto;
                 }
                 catch(ParseException err) {
                     err.printStackTrace();
                     return null;
                 }
-            }).toArray(EstudianteCsv[]::new);
+            }).toArray(e -> (T[]) Array.newInstance(clase, e));
         }
     }
 
     @Override
-    public void save(Object[] datos) throws IOException {
+    public <T extends RegistroCsv> void save(T[] datos) throws IOException {
         try (
             OutputStream st = Files.newOutputStream(ruta);
             OutputStreamWriter sw = new OutputStreamWriter(st); 
