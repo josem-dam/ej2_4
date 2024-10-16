@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
@@ -19,9 +20,9 @@ import org.apache.commons.csv.CSVPrinter;
 import edu.acceso.ej2_4.backend.Backend;
 
 /**
- * Backend para almacenar estudiantes en un archivo CSV.
+ * Backend para almacenar cualquier RegistroCsv en un archivo CSV.
  */
-public class BackendCsv implements BackendRegistroCsv {
+public class BackendCsv implements Backend {
 
     private Path ruta;
     private CSVFormat formatoBase;
@@ -37,8 +38,9 @@ public class BackendCsv implements BackendRegistroCsv {
                                         .build();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public <T extends RegistroCsv> T[] read(Class<T> clase) throws IOException {
+    public <T> T[] read(Class<T> tipo) throws IOException {
         CSVFormat formato = CSVFormat.Builder.create(formatoBase)
                             .setSkipHeaderRecord(true)
                             .build();
@@ -51,20 +53,20 @@ public class BackendCsv implements BackendRegistroCsv {
             return StreamSupport.stream(parser.spliterator(), false).map(registro -> {
                 String[] campos = StreamSupport.stream(registro.spliterator(), false).toArray(String[]::new);
                 try {
-                    T objeto = clase.getDeclaredConstructor().newInstance();
-                    objeto.cargarCampos(campos);
+                    T objeto = tipo.getDeclaredConstructor().newInstance();
+                    ((RegistroCsv) objeto).cargarCampos(campos);
                     return objeto;
                 }
-                catch(ParseException err) {
+                catch(ParseException|InstantiationException|IllegalAccessException|InvocationTargetException|NoSuchMethodException err) {
                     err.printStackTrace();
                     return null;
                 }
-            }).toArray(e -> (T[]) Array.newInstance(clase, e));
+            }).toArray(e -> (T[]) Array.newInstance(tipo, e));
         }
     }
 
     @Override
-    public <T extends RegistroCsv> void save(T[] datos) throws IOException {
+    public <T> void save(T[] datos) throws IOException {
         try (
             OutputStream st = Files.newOutputStream(ruta);
             OutputStreamWriter sw = new OutputStreamWriter(st); 

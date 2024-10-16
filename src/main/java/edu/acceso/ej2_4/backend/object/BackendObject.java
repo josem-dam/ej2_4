@@ -31,7 +31,7 @@ public class BackendObject implements Backend {
      * @throws IOException Si hay algún problema con el archivo de almacenamiento.
      */
     @Override
-    public void save(Object[] datos) throws IOException {
+    public <T> void save(T[] datos) throws IOException {
         try (
             OutputStream os = Files.newOutputStream(archivo);
             ObjectOutputStream oss = new ObjectOutputStream(os)
@@ -45,13 +45,14 @@ public class BackendObject implements Backend {
      * @return El objeto deserializado.
      * @throws IOException Si hay algún problema con el archivo de almacenamiento.
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public Object[] read() throws IOException {
+    public <T> T[] read(Class<T> tipo) throws IOException {
         try (
             InputStream is = Files.newInputStream(archivo);
             ObjectInputStream ois = new ObjectInputStream(is);
         ) {
-            return (Object[]) ois.readObject();
+            return (T[]) ois.readObject();
         }
         catch(ClassNotFoundException err) {
             err.printStackTrace();

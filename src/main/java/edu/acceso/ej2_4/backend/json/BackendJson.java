@@ -48,7 +48,7 @@ public class BackendJson implements Backend {
      * @throws IOException Si hay algún problema con el archivo de almacenamiento.
      */
     @Override
-    public void save(Object[] datos) throws IOException {
+    public <T> void save(T[] datos) throws IOException {
         try (
             OutputStream st = Files.newOutputStream(archivo);
             OutputStreamWriter sw = new OutputStreamWriter(st)
@@ -63,12 +63,12 @@ public class BackendJson implements Backend {
      * @throws IOException Si hay algún problema con el archivo de almacenamiento.
      */
     @Override
-    public EstudianteJson[] read() throws IOException {
+    public <T> T[] read(Class<T> tipo) throws IOException {
         try (
             InputStream st = Files.newInputStream(archivo);
             InputStreamReader sr = new InputStreamReader(st);
         ) {
-            return mapper.readValue(sr, EstudianteJson[].class);
+            return mapper.readValue(sr, mapper.getTypeFactory().constructArrayType(tipo));
         }
     }
 }
