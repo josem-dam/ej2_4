@@ -11,6 +11,8 @@ import edu.acceso.ej2_4.backend.json.BackendJson;
 import edu.acceso.ej2_4.backend.json.EstudianteJson;
 import edu.acceso.ej2_4.backend.object.BackendObject;
 import edu.acceso.ej2_4.backend.object.EstudianteObject;
+import edu.acceso.ej2_4.backend.yaml.BackendYaml;
+import edu.acceso.ej2_4.backend.yaml.EstudianteYaml;
 
 /**
  * Implementa el patrón Factory para seleccionar las clases apropiadas
@@ -22,6 +24,7 @@ public class BackendFactory {
         CSV(BackendCsv.class, EstudianteCsv.class),
         JSON(BackendJson.class, EstudianteJson.class),
         object(BackendObject.class, EstudianteObject.class),
+        YAML(BackendYaml.class, EstudianteYaml.class),
         XML(null, null);  // Aún no está implementado
 
         private Class<? extends Backend> tipoBackend;

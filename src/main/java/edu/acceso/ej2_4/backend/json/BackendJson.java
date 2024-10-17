@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.acceso.ej2_4.backend.Backend;
 
 /**
- * Serializa un objeto para almacenarlo en un archivo.
+ * Serializa un objeto para almacenarlo en un archivo JSON.
  */
 public class BackendJson implements Backend {
 
