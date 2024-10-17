@@ -7,6 +7,16 @@ import java.util.stream.Stream;
 
 import edu.acceso.ej2_4.Estudiante;
 
+/**
+ * Clase que parchea la secuencia de estudiantes leída o a escribir.
+ * 
+ * <p>
+ * Se ha decido almacenar el contador de número de matrícula como un primer estudiante fantasma cuyo número
+ * de matrícula es el número de matrícula que se asignará al siguiente estudiante que se matricule y con el
+ * resto de campos a nulo. La consecuencia es que, cuando se pretende almacenar un array de estudiantes, hay
+ * que añadir este estudiante fantasma como primer elemento del array y, cuando se lee del archivo, hay que
+ * eliminar el primer estudiante, porque será el fantasma.
+ */
 public class EstudiantePersistente {
 
     /**
@@ -37,6 +47,8 @@ public class EstudiantePersistente {
      */
     public static Estudiante[] read(Backend backend, Class<? extends Estudiante> tipo) throws IOException {
         Estudiante[] estudiantesLeidos = backend.read(tipo);
+
+        // Habría que tratar la posibilidad de que el archivo esté vacío o no exista el estudiante fantasma.
 
         // Usamos el primer estudiante para restutir el valor de siguienteMatricula
         Estudiante falso = estudiantesLeidos[0];
