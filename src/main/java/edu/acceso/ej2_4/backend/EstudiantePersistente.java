@@ -1,11 +1,11 @@
-package edu.acceso.ej2_4;
+package edu.acceso.ej2_4.backend;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import edu.acceso.ej2_4.backend.Backend;
+import edu.acceso.ej2_4.Estudiante;
 
 public class EstudiantePersistente {
 
