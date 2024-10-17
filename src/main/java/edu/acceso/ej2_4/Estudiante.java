@@ -1,14 +1,10 @@
 package edu.acceso.ej2_4;
 
 import java.io.Serializable;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Modela un estudiante según el enunciado del ejercicio.
@@ -21,10 +17,14 @@ public class Estudiante implements Serializable {
     protected static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
     /**
-     * Identificador único para cada estudiantes. Se obtiene calculando el MD5
-     * de la concatenación de sus atributos.
+     * Número de matrícula del próximo estudiante matriculado.
      */
-    private String id;
+    private static long siguienteMatricula = 1L;
+
+    /**
+     * Número de matrícula. Es único para cada estudiante.
+     */
+    private long matricula  = -1;
     /**
      * Nombre del estudiante.
      */
@@ -50,7 +50,7 @@ public class Estudiante implements Serializable {
     }
 
     /**
-     * Carga todos los datos de un estudiante.
+     * Carga todos los datos de un nuevo estudiante (sin número de matrícula aún).
      * @param nombre Nombre del estudiante.
      * @param apellidos Apellidos del estudiante.
      * @param nacimiento Fecha de nacimiento.
@@ -58,11 +58,63 @@ public class Estudiante implements Serializable {
      * @return El propio objeto.
      */
     public Estudiante cargarDatos(String nombre, String apellidos, Date nacimiento, Estudios estudios) {
+        setMatricula(siguienteMatricula++);
         setNombre(nombre);
         setApellidos(apellidos);
         setNacimiento(nacimiento);
         setEstudios(estudios);
         return this;
+    }
+
+    /**
+     * Carga todos los datos de un estudiante ya existente (tiene asignado un número de matricula).
+     * Si el nombre del estudiante es nulo, se entiende que lo que se quiere es fijar el número de la
+     * siguiente matrícula, no rellenar los datos de un estudiante.
+     * @param matricula Número de matrícula.
+     * @param nombre Nombre del estudiante.
+     * @param apellidos Apellidos del estudiante.
+     * @param nacimiento Fecha de nacimiento.
+     * @param estudios Estudios previos.
+     * @return El propio objeto.
+     */
+    public Estudiante cargarDatos(long matricula, String nombre, String apellidos, Date nacimiento, Estudios estudios) {
+        if(nombre != null) {
+            setMatricula(matricula);
+            setNombre(nombre);
+            setApellidos(apellidos);
+            setNacimiento(nacimiento);
+            setEstudios(estudios);
+            return this;
+        }
+        else {
+            siguienteMatricula = matricula;
+            setMatricula(matricula);
+            return null;
+        }
+    }
+
+    /**
+     * Devuelve el número del siguiente alumno que se matricule.
+     * @return El número de matrícula del próximo estudiante.
+     */
+    public static long getSiguienteMatricula() {
+        return siguienteMatricula;
+    }
+
+    /**
+     * Getter de matricula
+     * @return El número de matricula del estudiante.
+     */
+    public long getMatricula() {
+        return matricula;
+    }
+    
+    /**
+     * Setter de matricula. Sólo fija el valor, si matrícula no está inicializado aún.
+     * @param matricula Número de matricula del alumno.
+     */
+    public void setMatricula(long matricula) {
+        if(this.matricula == -1) this.matricula = matricula;
     }
 
     /**
@@ -152,46 +204,6 @@ public class Estudiante implements Serializable {
     public String toString() {
         return String.format("%s, %s (%d años)", apellidos, nombre, edad());
     }
-
-    /**
-     * Obtiene el MD5 de una cadena de texto (no es necesario)
-     * @param data La cadena de texto de la que se quiere obtener el resumen criptográfico.
-     * @return El resumen en formato hexadecimal.
-     */
-    public static String md5(String data) {
-        try {
-            MessageDigest md5 = MessageDigest.getInstance("md5");
-            md5.update(data.getBytes());
-            byte[] digest = md5.digest();
-            Byte[] digestB = new Byte[digest.length];
-            Arrays.setAll(digestB, i -> digest[i]);
-            return Arrays.stream(digestB).map(b -> String.format("%02x", b)).collect(Collectors.joining(""));
-        }
-        catch(NoSuchAlgorithmException err) {
-            assert false: "El algoritmo MD5 no existe";
-            return null;
-        }
-    }
-
-    /**
-     * Devuelve el identificador único del estudiante (no es necesario)
-     * @return El identificador en forma de cadena.
-     */
-    public String getId() {
-        if (id == null) {
-            String datos = String.format("%s%s%s%s", getNombre(), getApellidos(), df.format(getNacimiento()), getEstudios());
-            id = md5(datos);
-        }
-        return id.toString();
-    }
-
-    /*
-    @Override
-    public boolean equals(Object obj) {
-        Estudiante otro = (Estudiante) obj;
-        return getId().equals(otro.getId());
-    }
-    */
 
     @Override
     public boolean equals(Object obj) {

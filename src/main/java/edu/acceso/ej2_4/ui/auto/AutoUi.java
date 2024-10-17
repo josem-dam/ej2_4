@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import edu.acceso.ej2_4.Estudiante;
+import edu.acceso.ej2_4.EstudiantePersistente;
 import edu.acceso.ej2_4.Estudios;
 import edu.acceso.ej2_4.backend.Backend;
 import edu.acceso.ej2_4.backend.BackendFactory;
@@ -66,9 +67,11 @@ public class AutoUi implements Ui {
 
         try {
             System.out.println("Guardamos los estudiantes en un archivo...");
-            backend.save(estudiantes);
+            EstudiantePersistente.save(backend, estudiantes);
+
             System.out.println("Y ahora los recuperamos para comparar");
-            Estudiante[] estudiantesLeidos = backend.read(factory.getFormato().getTipoEstudiante());
+            Estudiante[] estudiantesLeidos = EstudiantePersistente.read(backend, factory.getFormato().getTipoEstudiante());
+
             System.out.printf("Lista original: %s\n", Arrays.toString(estudiantes));
             System.out.printf("Lista recuperada: %s\n", Arrays.toString(estudiantesLeidos));
             System.out.printf("¿Son iguales ambas listas? %b\n", Arrays.equals(estudiantes, estudiantesLeidos));

@@ -93,7 +93,7 @@ public class Main {
         // Interfaz por defecto: automática y formato csv.
         if(!opciones.containsKey("ui")) opciones.put("ui", "auto");
         if(!opciones.containsKey("formato") && opciones.get("ui") == "auto") {
-            opciones.put("formato", "csv");
+            opciones.put("formato", "yaml");
         }
 
         UiFactory uiFactory = new UiFactory(opciones);

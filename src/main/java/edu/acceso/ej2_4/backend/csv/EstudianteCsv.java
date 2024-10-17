@@ -20,12 +20,13 @@ public class EstudianteCsv extends Estudiante implements RegistroCsv {
 
     @Override
     public void cargarCampos(String ... campos) throws ParseException {
-        this.cargarDatos(campos[0], campos[1], df.parse(campos[2]), Estudios.valueOf(campos[3]));
+        this.cargarDatos(Long.parseLong(campos[0]), campos[1], campos[2], df.parse(campos[3]), Estudios.valueOf(campos[4]));
     }
 
     @Override
     public String[] toCsv() {
         return new String[] {
+            Long.toString(getMatricula()),
             getNombre(),
             getApellidos(),
             df.format(getNacimiento()),

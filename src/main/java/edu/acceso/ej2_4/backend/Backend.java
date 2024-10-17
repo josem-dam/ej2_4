@@ -10,14 +10,15 @@ public interface Backend {
 
     /**
      * Lee del almacenamiento.
-     * @return El objeto almacenado.
+     * @param tipo La clase de la secuencia de objetos que se pretenden leer.
+     * @return La secuencia de objetos leídos.
      * @throws IOException Si no puede leerse el almacenamiento.
      */
-    public <T> T[] read(Class<T> clase) throws IOException;
+    public <T> T[] read(Class<T> tipo) throws IOException;
 
     /**
      * Guarda los datos en el almacenamiento.
-     * @param datos Los datos que se necesita guardar.
+     * @param datos La secuencia de datos que se necesita guardar.
      * @throws IOException Si no pueden almacenarse los datos.
      */
     public <T> void save(T[] datos) throws IOException;
