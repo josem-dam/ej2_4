@@ -205,7 +205,7 @@ public class Estudiante implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s, %s (%d años)", apellidos, nombre, edad());
+        return String.format("%d: %s, %s (%d años)", matricula, apellidos, nombre, edad());
     }
 
     @Override

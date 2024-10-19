@@ -10,6 +10,7 @@ public interface Backend {
     /**
      * Lee del almacenamiento.
      * @param tipo La clase de la secuencia de objetos que se pretenden leer.
+     * @param <T> Clase de los objetos
      * @return La secuencia de objetos leídos.
      * @throws IOException Si no puede leerse el almacenamiento.
      */
@@ -18,6 +19,7 @@ public interface Backend {
     /**
      * Guarda los datos en el almacenamiento.
      * @param datos La secuencia de datos que se necesita guardar.
+     * @param <T> Clase de los objetos
      * @return La cantidad de objetos almacenados.
      * @throws IOException Si no pueden almacenarse los datos.
      */

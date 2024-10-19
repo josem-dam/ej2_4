@@ -20,25 +20,62 @@ import edu.acceso.ej2_4.backend.yaml.EstudianteYaml;
  */
 public class BackendFactory {
 
+    /**
+     * Formato de almacenamiento disponibles.
+     */
     public static enum Formato {
+        /**
+         * Almacenamiento en CSV.
+         */
         CSV(BackendCsv.class, EstudianteCsv.class),
+        /**
+         * Almacenamiento en JSON.
+         */
         JSON(BackendJson.class, EstudianteJson.class),
+        /**
+         * Almacenamiento generado mediante serialización de objetos.
+         */
         object(BackendObject.class, EstudianteObject.class),
+        /**
+         * Alacenamiento en YAML.
+         */
         YAML(BackendYaml.class, EstudianteYaml.class),
+        /**
+         * Almacenamiento en XML.
+         */
         XML(null, null);  // Aún no está implementado
 
+        /**
+         * Tipo de la clase que implementa el almacenamiento en un formato determinado.
+         */
         private Class<? extends Backend> tipoBackend;
+        /**
+         * Tipo del la clase de estudiante asociada al almacenamiento.
+         */
         private Class<? extends Estudiante> tipoEstudiante;
 
+        /**
+         * Constructor del enum.
+         * @param backend Tipo del formato de almacenamiento.
+         * @param estudiante Tipo del estudiante asociado al formato de almacenamiento.
+         */
         Formato(Class<? extends Backend> backend, Class<? extends Estudiante> estudiante) {
             tipoBackend = backend;
             tipoEstudiante = estudiante;
         }
 
+        /**
+         * Getter de tipoBackend
+         * @return El tipo del formato de almacenamiento.
+         */
         public Class<? extends Backend> getTipoBackend() {
             return tipoBackend;
         }
 
+        /**
+         * Getter de tipoEstudiante.
+         * @return El tipo de estudiante que se almacena.
+         */
         public Class<? extends Estudiante> getTipoEstudiante() {
             return tipoEstudiante;
         }
@@ -58,11 +95,18 @@ public class BackendFactory {
                             .findFirst().orElse(null);
         }
 
+        /**
+         * Indica si el formato de almacenamiento está implementado.
+         * @return true, si está implementado.
+         */
         public boolean noImplementado() {
             return tipoBackend == null || tipoEstudiante == null;
         }
     };
 
+    /**
+     * Formato de almacenamiento.
+     */
     private Formato formato;
 
     /**

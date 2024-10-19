@@ -11,8 +11,15 @@ import java.lang.reflect.Method;
  */
 public class BackendWrapper implements Backend {
 
+    /**
+     * Objeto encargado de almacenar y al que queremos añadir el envoltorio.
+     */
     private Backend formato;
 
+    /**
+     * Constructor de la clase.
+     * @param formato Objeto que se encarga del almacenamiento.
+     */
     public BackendWrapper(Backend formato) {
         this.formato = formato;
     }
@@ -21,6 +28,7 @@ public class BackendWrapper implements Backend {
      * Lee datos manipulándolos a continuación si la clase de objetos
      * leídos tiene definido el método estático "postread".
      * @param tipo Clase de la secuencia de objetos que se pretenden leer
+     * @param <T> Clase de los objetos
      * @return Los datos leídos.
      */
     @SuppressWarnings("unchecked")
@@ -57,6 +65,7 @@ public class BackendWrapper implements Backend {
     /**
      * Escribe los datos, manipulándolos antes si la clase de objetos que
      * se pretenden escribir, tiene definido el método estático "presave".
+     * @param <T> Clase de los objetos
      * @param datos Los datos que se pretenden almacenar.
      */
     @SuppressWarnings("unchecked")

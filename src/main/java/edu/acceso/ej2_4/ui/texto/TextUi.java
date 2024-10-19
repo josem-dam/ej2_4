@@ -1,14 +1,15 @@
 package edu.acceso.ej2_4.ui.texto;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Stream;
 
 import edu.acceso.ej2_4.Estudiante;
 import edu.acceso.ej2_4.Estudios;
@@ -21,9 +22,13 @@ import edu.acceso.ej2_4.ui.Ui;
  */
 public class TextUi implements Ui {
 
-    private static BackendFactory factory;
     private static Scanner sc = new Scanner(System.in);
     private static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+    private ArrayList<Estudiante> estudiantes;
+    private BackendFactory factory;
+    private Backend backend;
+    private Path ruta;
     private Map<String, String> opciones;
 
     /**
@@ -32,6 +37,7 @@ public class TextUi implements Ui {
      */
     public TextUi(Map<String, String> opciones) {
         this.opciones = opciones;
+        estudiantes = new ArrayList<>();
     }
 
     /**
@@ -73,11 +79,86 @@ public class TextUi implements Ui {
         return opciones[resp];
     }
 
+    private static boolean confirmar(String mensaje) {
+        while(true) {
+            System.out.println(mensaje + " (s/n)");
+            String respuesta = sc.nextLine();
+            switch(respuesta.toLowerCase()) {
+                case "s":
+                case "si":
+                case "sí":
+                case "y":
+                case "yes":
+                    return true;
+                case "n":
+                case "no":
+                    return false;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Arranca la interfaz.
+     */
+    @Override
+    public void start() {
+
+        String[] menuPrincipal = {"Matricular estudiante", "Eliminar estudiante", "Ver estudiantes", "Guardar en disco", "Recuperar de disco", "Borrar de memoria", "Salir"};
+
+        String formato = opciones.getOrDefault("formato", null);
+        if(formato == null) {
+            String[] formatos = Arrays.stream(BackendFactory.Formato.values()).map(f -> f.name()).toArray(String[]::new);
+            int respFormato = preguntarOpcion(formatos, "¿En qué formato quiere almacenar la información");
+            formato = formatos[respFormato];
+        }
+
+        ruta = opciones.containsKey("file")?Path.of(opciones.get("file")):Ui.generarRuta(Estudiante.class, formato);
+        factory = new BackendFactory(formato);
+        backend = factory.crearBackend(ruta);
+        
+        while(true) {
+            int opcion = preguntarOpcion(menuPrincipal, "\n¿Qué desea hacer?");
+            switch(opcion) {
+                case 0:
+                    Estudiante estudiante = preguntarEstudiante();
+                    estudiantes.add(estudiante);
+                    System.out.printf("Creado el estudiante %s.\n", estudiante);
+                    break;
+                case 1:
+                    eliminarEstudiante();
+                    break;
+                case 2:
+                    mostrarEstudiantes();
+                    break;
+                case 3:
+                    int registros = guardar();
+                    System.out.printf("%d registro(s) almacenado(s).\n", registros);
+                    break;
+                case 4:
+                    leer();
+                    break;
+                case 5:
+                    borrarTodo();
+                    System.out.printf("El próximo matriculado será el %d.\n", Estudiante.getSiguienteMatricula());
+                    break;
+                case 6:
+                    System.out.println("¡¡¡Adiós!!!");
+                    System.exit(0);
+                    break;
+                default:
+                    assert false: "Opción imposible";
+                    System.exit(3);
+            }
+        }
+    }
+
     /**
      * Realiza las preguntas para obtener información sobre un estudiante.
      * @return El objeto Estudiante generado.
      */
-    private static Estudiante preguntarEstudiante() {
+    private Estudiante preguntarEstudiante() {
         sc.nextLine();
         System.out.print("Nombre: ");
         String nombre  = sc.nextLine();
@@ -104,43 +185,105 @@ public class TextUi implements Ui {
     }
 
     /**
-     * Arranca la interfaz.
+     * Elimina un estudiante de la lista.
      */
-    @Override
-    public void start() {
-
-        String formato = opciones.getOrDefault("formato", null);
-        if(formato == null) {
-            String[] formatos = Arrays.stream(BackendFactory.Formato.values()).map(f -> f.name()).toArray(String[]::new);
-            int respFormato = preguntarOpcion(formatos, "¿En qué formato quiere almacenar la información");
-            formato = formatos[respFormato];
+    private void eliminarEstudiante() {
+        if(estudiantes.size() == 0) {
+            System.err.println("ERROR. No hay estudiantes en memoria.");
+            return;
         }
 
-        Path ruta = opciones.containsKey("file")?Path.of(opciones.get("file")):Ui.generarRuta(Estudiante.class, formato);
-        factory = new BackendFactory(formato);
-        
-        System.out.print("Indique el número de estudiantes que desea registrar: ");
-        int cantidad = sc.nextInt();
+        String[] borrandos = estudiantes.stream().map(Estudiante::toString).toArray(String[]::new);
+        int opcion = preguntarOpcion(borrandos, "Indique qué estudiante desea borrar:");
+        Estudiante borrado =  estudiantes.remove(opcion);
+        System.out.printf("Borrado el estudiante %d.\n", borrado.getMatricula());
+    }
 
-        Estudiante[] estudiantes =  Stream.generate(()-> {
-            System.out.printf("--Estudiante--\n");
-            return preguntarEstudiante();
-        }).limit(cantidad).toArray(Estudiante[]::new);
+    /**
+     * Muestra la lista de estudiantes en memoria.
+     */
+    private void mostrarEstudiantes() {
+        if(estudiantes.size() > 0 ) {
+            System.out.println("Estudiantes en memoria:");
+            estudiantes.forEach(System.out::println);
+        }
+        else {
+            System.out.println("No hay estudiantes en memoria.");
+        }
+        System.out.printf("El próximo matriculado será el %d.\n", Estudiante.getSiguienteMatricula());
+    }
 
-        Backend backend = factory.crearBackend(ruta);
+    /**
+     * Guardar estudiantes en disco.
+     * @return El número de registros (estudiantes) guardados.
+     */
+    private int guardar() {
+        if(Files.exists(ruta)) {
+            boolean seguir = confirmar("El archivo existe, ¿quiere sobreescribirlo?");
+            if(!seguir) return 0;
+        }
+
         try {
-            System.out.println("Guardamos los estudiantes en un archivo...");
-            int num = backend.save(estudiantes);
-            System.out.printf("%d registro(s) almacenado(s).\n", num);
-            System.out.println("Y ahora pulse Intro para recuperarlos");
-            sc.nextLine();
-            Estudiante[] estudiantesLeidos = backend.read(factory.getFormato().getTipoEstudiante());
-            System.out.printf("Lista original: %s\n", Arrays.toString(estudiantes));
-            System.out.printf("Lista recuperada: %s\n", Arrays.toString(estudiantesLeidos));
-            System.out.printf("¿Son iguales ambas listas? %b\n", Arrays.equals(estudiantes, estudiantesLeidos));
+            return backend.save(estudiantes.toArray(Estudiante[]::new));
         }
         catch(IOException err) {
-            err.printStackTrace();
+            System.err.printf("ERROR. No puede guardarse la información: %s.\n", err.getMessage());
+            return 0;
         }
+    }
+
+    /**
+     * Leer estudiantes de disco.
+     */
+    private void leer() {
+        if(!Files.exists(ruta)) {
+            System.err.println("ERROR. No existe el archivo %s. ¿Ha guardado alguna vez estudiantes?\n");
+            return;
+        }
+
+        Estudiante[] estudiantesLeidos = null;
+        // La lectura modifica automáticamente el próximo matriculado, así que
+        // debemos guardarlo por si al final desechamos la lectura ya hecha.
+        long proximoMatriculado = Estudiante.getSiguienteMatricula();
+
+        try {
+            estudiantesLeidos = backend.read(factory.getFormato().getTipoEstudiante());
+        }
+        catch(IOException err) {
+            System.err.printf("ERROR. No puede leerse el archivo: %s.\n", err.getMessage());
+            return;
+        }
+
+        boolean hay = estudiantes.size() > 0;
+        boolean iguales = hay?Arrays.equals(estudiantes.toArray(Estudiante[]::new), estudiantesLeidos):false;
+        boolean reemplazar = !hay;
+
+        if(iguales) {
+            System.out.println("Los estudiantes ya estaban en memoria. No se hace nada.");
+            reemplazar = false;
+        }
+        else if(hay) {
+            reemplazar = confirmar("En memoria tiene otros estudiantes, ¿quiere reemplazarlos por los de disco?");
+        }
+
+        if(reemplazar) {
+            proximoMatriculado = Estudiante.getSiguienteMatricula();
+            borrarTodo();
+            estudiantes.addAll(0, Arrays.asList(estudiantesLeidos));
+        }
+        else {
+            System.out.println("Continuamos con los estudiantes cargados en memoria.");
+        }
+
+        new Estudiante().cargarDatos(proximoMatriculado, null, null, null, null);
+        System.out.printf("El próximo matriculado será el %d.\n", Estudiante.getSiguienteMatricula());
+    }
+
+    /**
+     * Borrar los estudiantes que hay en memoria.
+     */
+    private void borrarTodo() {
+        estudiantes.clear();
+        new Estudiante().cargarDatos(1L, null, null, null, null);
     }
 }
