@@ -11,7 +11,6 @@ import edu.acceso.ej2_4.Estudiante;
 import edu.acceso.ej2_4.Estudios;
 import edu.acceso.ej2_4.backend.Backend;
 import edu.acceso.ej2_4.backend.BackendFactory;
-import edu.acceso.ej2_4.backend.EstudiantePersistente;
 import edu.acceso.ej2_4.ui.Ui;
 
 /**
@@ -31,6 +30,9 @@ public class AutoUi implements Ui {
         this.opciones = opciones;
     }
 
+    /**
+     * Arranca la interfaz.
+     */
     @Override
     public void start() {
 
@@ -39,7 +41,8 @@ public class AutoUi implements Ui {
         String formato = opciones.get("formato");
         if(formato == null) throw new RuntimeException("No hay definido formato de almacenamiento");
 
-        Path ruta = Backend.generarRuta(opciones.getOrDefault("file", null), formato.toLowerCase());
+        Path ruta = opciones.containsKey("file")?Path.of(opciones.get("file")):Ui.generarRuta(Estudiante.class, formato);
+
         BackendFactory factory = new BackendFactory(formato);
         
         try {
@@ -66,15 +69,25 @@ public class AutoUi implements Ui {
         Backend backend = factory.crearBackend(ruta);
 
         try {
-            System.out.println("Guardamos los estudiantes en un archivo...");
-            EstudiantePersistente.save(backend, estudiantes);
+            System.out.print("Guardamos los estudiantes en un archivo... ");
+            int cantidad = backend.save(estudiantes);
+            System.out.printf("%d registro(s) almacenado(s).\n", cantidad);
 
-            System.out.println("Y ahora los recuperamos para comparar");
-            Estudiante[] estudiantesLeidos = EstudiantePersistente.read(backend, factory.getFormato().getTipoEstudiante());
+            System.out.printf("El próximo estudiante matriculado recibirá el número %d.\n", Estudiante.getSiguienteMatricula());
+
+            // Manipulamos siguienteMatricula
+            new Estudiante().cargarDatos(100, null, null, null, null);
+            System.out.printf("Alteramos ese número y pasa a ser %d.\n\n", Estudiante.getSiguienteMatricula());
+
+            System.out.println("Ahora recuperamos los estudiantes para comparar.");
+            Estudiante[] estudiantesLeidos = backend.read(factory.getFormato().getTipoEstudiante());
 
             System.out.printf("Lista original: %s\n", Arrays.toString(estudiantes));
             System.out.printf("Lista recuperada: %s\n", Arrays.toString(estudiantesLeidos));
             System.out.printf("¿Son iguales ambas listas? %b\n", Arrays.equals(estudiantes, estudiantesLeidos));
+
+            System.out.printf("El próximo estudiante matriculado recibirá el número %d.\n", Estudiante.getSiguienteMatricula());
+
         }
         catch(IOException err) {
             err.printStackTrace();

@@ -102,7 +102,7 @@ public class BackendFactory {
      */
     public Backend crearBackend(Path archivo) {
         try {
-            return formato.getTipoBackend().getDeclaredConstructor(Path.class).newInstance(archivo);
+            return new BackendWrapper(formato.getTipoBackend().getDeclaredConstructor(Path.class).newInstance(archivo));
         }
         catch(NoSuchMethodException|SecurityException|InstantiationException|IllegalAccessException|InvocationTargetException err) {
             return null;

@@ -31,13 +31,15 @@ public class BackendObject implements Backend {
      * @throws IOException Si hay algún problema con el archivo de almacenamiento.
      */
     @Override
-    public <T> void save(T[] datos) throws IOException {
+    public <T> int save(T[] datos) throws IOException {
         try (
             OutputStream os = Files.newOutputStream(archivo);
             ObjectOutputStream oss = new ObjectOutputStream(os)
         ) {
             oss.writeObject(datos);
         }
+
+        return datos.length;
     }
 
     /**

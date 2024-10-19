@@ -66,7 +66,7 @@ public class BackendCsv implements Backend {
     }
 
     @Override
-    public <T> void save(T[] datos) throws IOException {
+    public <T> int save(T[] datos) throws IOException {
         try (
             OutputStream st = Files.newOutputStream(ruta);
             OutputStreamWriter sw = new OutputStreamWriter(st); 
@@ -74,5 +74,7 @@ public class BackendCsv implements Backend {
         ) {
             printer.printRecords(Arrays.stream(datos).map(r -> ((RegistroCsv) r).toCsv()));
         }
+
+        return datos.length;
     }
 }

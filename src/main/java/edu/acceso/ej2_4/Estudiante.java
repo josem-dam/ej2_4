@@ -1,10 +1,13 @@
 package edu.acceso.ej2_4;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * Modela un estudiante según el enunciado del ejercicio.
@@ -213,5 +216,40 @@ public class Estudiante implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(nombre, apellidos, nacimiento, estudios);
+    }
+
+    // Particularidades de su almacenamiento.
+
+    /**
+     * Añade un estudiante fantasma al comienzo del array cuyo número
+     * de matrícula es el que debe asignarse al próximo estudiante que se matricule.
+     * @param estudiantes Los estudiantes que quieren almacenarse.
+     * @return Los estudiantes con la adición del estudiante fantasma.
+     */
+    public static Estudiante[] presave(Estudiante[] estudiantes) {
+        try {
+            Estudiante falso = estudiantes[0].getClass().getDeclaredConstructor().newInstance();
+            falso.cargarDatos(Estudiante.getSiguienteMatricula(), null, null, null, null);
+            return Stream.concat(Arrays.stream(new Estudiante[] {falso}), Arrays.stream(estudiantes)).toArray(Estudiante[]::new);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException e) {
+            e.printStackTrace();
+            return estudiantes;
+        }
+    }
+
+    /**
+     * Toma el estudiante falso que sirve para recordar el siguiente número
+     * de matrícula y lo usa establecer el valor de siguienteMatricula.
+     * @param estudiantes La lista de estudiantes leidos.
+     * @return La lista de estudiantes a la que se ha quitado el estudiante falso.
+     */
+    public static Estudiante[] postread(Estudiante[] estudiantes) {
+        if(estudiantes.length == 0) return estudiantes;
+
+        Estudiante falso = estudiantes[0];
+        new Estudiante().cargarDatos(falso.getMatricula(), null, null, null, null);
+
+        return Arrays.copyOfRange(estudiantes, 1, estudiantes.length);
     }
 }

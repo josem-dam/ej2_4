@@ -48,13 +48,15 @@ public class BackendJson implements Backend {
      * @throws IOException Si hay algún problema con el archivo de almacenamiento.
      */
     @Override
-    public <T> void save(T[] datos) throws IOException {
+    public <T> int save(T[] datos) throws IOException {
         try (
             OutputStream st = Files.newOutputStream(archivo);
             OutputStreamWriter sw = new OutputStreamWriter(st)
         ) {
             mapper.writeValue(sw, datos);
         }
+
+        return datos.length;
     }
 
     /**

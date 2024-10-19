@@ -14,7 +14,6 @@ import edu.acceso.ej2_4.Estudiante;
 import edu.acceso.ej2_4.Estudios;
 import edu.acceso.ej2_4.backend.Backend;
 import edu.acceso.ej2_4.backend.BackendFactory;
-import edu.acceso.ej2_4.backend.EstudiantePersistente;
 import edu.acceso.ej2_4.ui.Ui;
 
 /**
@@ -104,6 +103,9 @@ public class TextUi implements Ui {
         );
     }
 
+    /**
+     * Arranca la interfaz.
+     */
     @Override
     public void start() {
 
@@ -114,7 +116,7 @@ public class TextUi implements Ui {
             formato = formatos[respFormato];
         }
 
-        Path ruta = Backend.generarRuta(opciones.getOrDefault("file", null), formato.toLowerCase());
+        Path ruta = opciones.containsKey("file")?Path.of(opciones.get("file")):Ui.generarRuta(Estudiante.class, formato);
         factory = new BackendFactory(formato);
         
         System.out.print("Indique el número de estudiantes que desea registrar: ");
@@ -128,10 +130,11 @@ public class TextUi implements Ui {
         Backend backend = factory.crearBackend(ruta);
         try {
             System.out.println("Guardamos los estudiantes en un archivo...");
-            EstudiantePersistente.save(backend, estudiantes);
+            int num = backend.save(estudiantes);
+            System.out.printf("%d registro(s) almacenado(s).\n", num);
             System.out.println("Y ahora pulse Intro para recuperarlos");
             sc.nextLine();
-            Estudiante[] estudiantesLeidos = EstudiantePersistente.read(backend, factory.getFormato().getTipoEstudiante());
+            Estudiante[] estudiantesLeidos = backend.read(factory.getFormato().getTipoEstudiante());
             System.out.printf("Lista original: %s\n", Arrays.toString(estudiantes));
             System.out.printf("Lista recuperada: %s\n", Arrays.toString(estudiantesLeidos));
             System.out.printf("¿Son iguales ambas listas? %b\n", Arrays.equals(estudiantes, estudiantesLeidos));
